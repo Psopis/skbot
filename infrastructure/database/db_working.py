@@ -47,6 +47,15 @@ class UserWorking:
         await user.save()
 
     @staticmethod
+    async def attempt_gpt_minus(user_id):
+
+        user = await User.get(user_id=user_id)
+        d = user.free_attempts_gpt
+        user.free_attempts_gpt = d - 1
+        await user.save()
+        return user.free_attempts_gpt
+
+    @staticmethod
     async def set_your_promo(user_id, promo):
         user = await User.get(user_id=user_id)
         user.your_promo = promo

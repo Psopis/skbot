@@ -28,9 +28,7 @@ async def subscribe_ch(call: CallbackQuery):
 
     if check:
         await call.message.delete()
-        print('added', call.from_user.username)
-        await UserWorking.add_user(username=call.from_user.username, user_id=call.from_user.id,
-                                   time=datetime.date.today() )
+
         await call.message.answer(
             """Привет! Я - Эдя, бот с искусственным интеллектом. \nТы можешь задать мне любой вопрос, а я на него отвечу☺️""",
             reply_markup=main_user_profile())

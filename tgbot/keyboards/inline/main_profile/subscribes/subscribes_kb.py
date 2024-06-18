@@ -7,16 +7,16 @@ def profile_subscribes():
     kb = InlineKeyboardBuilder()
     
     kb.row(InlineKeyboardButton(
-        text="👤Начальный", callback_data="Start_sub"
+        text="1 месяц", callback_data="monthSub_1"
     )
     )
 
     kb.row(InlineKeyboardButton(
-        text="⭐Продвинутый", callback_data="Propd_sub"
+        text="3 месяца", callback_data="monthSub_3"
     )
     )
     kb.row(InlineKeyboardButton(
-        text="🔥PRO", callback_data="PRO_sub"
+        text="Год", callback_data="monthSub_12"
     )
     )
     kb.row(InlineKeyboardButton(

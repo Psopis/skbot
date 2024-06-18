@@ -23,9 +23,14 @@ class states(StatesGroup):
 @gen_router.callback_query(F.data == 'MJ_neuro')
 async def send_textimg(call: CallbackQuery, state: FSMContext):
     await call.answer()
-
-    await call.message.answer(text='Напишите описание изображения:', reply_markup=None)
-    await state.set_state(states.generation_photo)
+    user = await UserWorking.get_user(call.from_user.id)
+    if user.subscribe:
+        await call.message.delete()
+        await call.message.answer(text='Напишите описание изображения:', reply_markup=None)
+        await state.set_state(states.generation_photo)
+    else:
+        await call.message.delete()
+        await call.message.answer(text='Вы не приобрели подписку!', reply_markup=main_user_profile())
 
 
 @gen_router.message(states.generation_photo)

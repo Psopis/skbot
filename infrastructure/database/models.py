@@ -9,6 +9,8 @@ class User(Model):
     date = fields.DateField()
     your_promo = fields.TextField()
     activated_promo = fields.TextField()
+    free_attempts_gpt = fields.IntField(default=5)
+    subscribe = fields.BooleanField(default=False)
     is_employee = fields.BooleanField(default=False)
 
     def __str__(self):

@@ -7,13 +7,7 @@ def helps_kb():
     kb = InlineKeyboardBuilder()
 
     kb.row(InlineKeyboardButton(
-        text="📚База знаний", callback_data="Base_knowleges",url='https://example.com'
-    )
-    )
-
-    kb.row(InlineKeyboardButton(
-        text="👨‍💻Контакт поддержки", callback_data="Contact_hepling",
-        url='https://example.com'
+        text="📚База знаний", url='https://journal.tinkoff.ru/how-to-prompt/#one'
     )
     )
 

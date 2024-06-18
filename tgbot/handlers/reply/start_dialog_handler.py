@@ -5,6 +5,7 @@ from aiogram.types import Message
 from aiogram import F, types
 from aiogram import Router
 
+from infrastructure.database.db_working import UserWorking
 from infrastructure.neuro.gpt.chat_gpt import gpt_answer
 from tgbot.keyboards.reply.end_gpt_dialog_kb import end_dialog
 from tgbot.keyboards.reply.profile_kb import main_user_profile
@@ -54,20 +55,23 @@ async def with_puree(message: types.Message, state: FSMContext):
 
 @router.message(Dialog.start_gpt)
 async def question_gpt(message: types.Message, state: FSMContext):
-    user_data = await state.get_data()
-    msg = await message.answer(text='Навожу магию, секунду 🪄')
-    user_data["messages"].append(
-        {
-            "role": "user",
-            "content": message.text.lower(),
-        })
-    bot_message = gpt_answer(user_data["messages"])
+    if await UserWorking.attempt_gpt_minus(message.from_user.id) == 0:
+        await message.answer(text='Чтобы дальше пользовтаься чатом надо приобрести подписку!',
+                             reply_markup=end_dialog())
+    else:
+        user_data = await state.get_data()
+        msg = await message.answer(text='Навожу магию, секунду 🪄')
+        user_data["messages"].append(
+            {
+                "role": "user",
+                "content": message.text.lower(),
+            })
+        bot_message = gpt_answer(user_data["messages"])
 
-    await message.bot.edit_message_text(text=bot_message,chat_id=message.chat.id, message_id=msg.message_id)
-    user_data["messages"].append(
-        {
-            "role": "bot",
-            "content": bot_message,
-        })
-    await state.update_data(messages=user_data["messages"])
-
+        await message.bot.edit_message_text(text=bot_message, chat_id=message.chat.id, message_id=msg.message_id)
+        user_data["messages"].append(
+            {
+                "role": "bot",
+                "content": bot_message,
+            })
+        await state.update_data(messages=user_data["messages"])
