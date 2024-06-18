@@ -15,8 +15,8 @@ def category_neuro():
     )
     )
 
-    kb.row(InlineKeyboardButton(
-        text="📼Видео", callback_data="video_remake"
-    )
-    )
+    # kb.row(InlineKeyboardButton(
+    #     text="📼Видео", callback_data="video_remake"
+    # )
+    # )
     return kb.as_markup()
