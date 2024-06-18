@@ -21,8 +21,6 @@ class states(StatesGroup):
 
 @dop_router.callback_query(F.data == 'create_promo')
 async def textfor_set_promorcode(call: CallbackQuery, state: FSMContext):
-    await call.answer()
-
     text = f"""Введите промокод, который хотели бы использовать:
 
 ❗️ Название промокода нельзя будет поменять."""

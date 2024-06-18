@@ -31,7 +31,7 @@ async def choosing_neuro_to_txtimg(call: CallbackQuery, state: FSMContext):
 Доступно для вывода: 0 ₽
 Приведено рефералов: 0
 Награда за активацию: -"""
-    await call.message.answer(text=text,
+    await call.message.edit_text(text=text,
                               reply_markup=partner_dop_section())
 
 

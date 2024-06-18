@@ -34,16 +34,17 @@ async def choosing_neuro_to_txtimg(call: CallbackQuery, state: FSMContext):
 @gen_router.callback_query(F.data == 'SD_neuro')
 async def send_textimg(call: CallbackQuery, state: FSMContext):
     await call.answer()
-
+    await call.message.delete()
     await call.message.answer(text='Напишите описание изображения:', reply_markup=None)
     await state.set_state(states.generation_photo)
 
 
 @gen_router.message(states.generation_photo)
 async def send_text_to_img_neuro(message: Message, state: FSMContext):
-    await message.answer(text='Навожу магию, секунду 🪄')
-    photo = get_SD_picture(message.text)
 
+    msg = await message.answer(text='Навожу магию, секунду 🪄')
+    photo = get_SD_picture(message.text)
+    await msg.delete()
     await message.bot.send_photo(chat_id=message.chat.id, photo=FSInputFile(photo))
     await message.answer(text="Фотография получена!", reply_markup=main_user_profile())
     shutil.rmtree(photo[:-11])

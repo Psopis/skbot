@@ -20,8 +20,8 @@ class states(StatesGroup):
 @dop_router.callback_query(F.data == '_Subscribe')
 async def choosing_neuro_to_txtimg(call: CallbackQuery, state: FSMContext):
     await call.answer()
-    await call.message.answer(text='Выберите тарифный план',
-                              reply_markup=profile_subscribes())
+    await call.message.edit_text(text='Выберите тарифный план',
+                                 reply_markup=profile_subscribes())
 
 
 @dop_router.callback_query(F.data == 'back_in_profile')

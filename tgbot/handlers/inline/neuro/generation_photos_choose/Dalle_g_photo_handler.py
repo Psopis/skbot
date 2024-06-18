@@ -30,9 +30,9 @@ async def send_textimg(call: CallbackQuery, state: FSMContext):
 
 @gen_router.message(states.generation_photo)
 async def send_text_to_img_neuro(message: Message, state: FSMContext):
-    await message.answer(text='Навожу магию, секунду 🪄')
+    msg = await message.answer(text='Навожу магию, секунду 🪄')
     photo = get__dalle(message.text)
-
+    await msg.delete()
     await message.bot.send_photo(chat_id=message.chat.id, photo=FSInputFile(photo))
     await message.answer(text="Фотография получена!", reply_markup=main_user_profile())
     shutil.rmtree(photo[:-11])

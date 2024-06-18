@@ -28,7 +28,7 @@ async def choosing_neuro_to_txtimg(call: CallbackQuery, state: FSMContext):
 
 Если Вы не нашли ответ на свой вопрос, напишите нам. 
 Мы всегда будем рады помочь ❤️"""
-    await call.message.answer(text=text,
+    await call.message.edit_text(text=text,
                               reply_markup=helps_kb())
 
 

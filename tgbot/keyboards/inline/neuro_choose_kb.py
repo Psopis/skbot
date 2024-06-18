@@ -3,9 +3,6 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
-
-
-
 def category_neuro_generation_photo():
     kb = InlineKeyboardBuilder()
     kb.add(InlineKeyboardButton(
