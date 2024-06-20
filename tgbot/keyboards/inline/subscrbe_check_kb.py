@@ -18,15 +18,15 @@ def subscribe_check():
     return kb.as_markup()
 
 
-def money_set(cost):
+def money_set(payment):
     kb = InlineKeyboardBuilder()
     kb.add(InlineKeyboardButton(
         text="Оплатить",
-        url='https://example.com'
+        url=payment.confirmation.confirmation_url
     )
     )
     kb.row(InlineKeyboardButton(
-        text=f"✅Я оплатил {cost}", callback_data=f"check_payment_{cost}"
+        text=f"✅Я оплатил", callback_data=f"check_payment_{payment.id}_{payment.amount.value}"
     )
     )
     kb.row(InlineKeyboardButton(

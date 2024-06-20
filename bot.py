@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import time
 
 import betterlogging as bl
 from aiogram import Bot, Dispatcher
@@ -7,6 +8,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.storage.redis import RedisStorage, DefaultKeyBuilder
 
 from infrastructure.database.setup import init_db
+from infrastructure.subscribe_check import check_subs
 from tgbot.config import load_config, Config
 from tgbot.handlers import routers_list
 
@@ -58,6 +60,7 @@ def get_storage(config):
 
 
 async def main():
+
     setup_logging()
 
     config = load_config(".env")
@@ -69,7 +72,7 @@ async def main():
     dp.include_routers(*routers_list)
 
     await init_db()
-
+    asyncio.create_task(check_subs(bot))
     await dp.start_polling(bot)
 
 

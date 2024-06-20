@@ -1,4 +1,3 @@
-
 from aiogram import Router, F
 
 from aiogram.fsm.context import FSMContext
@@ -9,7 +8,6 @@ from aiogram.utils.deep_linking import create_start_link
 from infrastructure.database.db_working import UserWorking
 from tgbot.keyboards.inline.main_profile.details_kb import profile_dop_section
 from tgbot.keyboards.inline.main_profile.partner.partners_kb import partner_dop_section
-
 
 dop_router = Router()
 
@@ -27,13 +25,11 @@ async def choosing_neuro_to_txtimg(call: CallbackQuery, state: FSMContext):
 
 Статистика:
 
-
-
-Доступно для вывода: 0 ₽
-Приведено рефералов: 0
-Награда за активацию: -"""
+Доступно для вывода: {user.referral_balance} ₽
+Приведено рефералов: -
+"""
     await call.message.edit_text(text=text,
-                              reply_markup=partner_dop_section())
+                                 reply_markup=partner_dop_section())
 
 
 @dop_router.callback_query(F.data == 'back_in_profile')

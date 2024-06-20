@@ -6,6 +6,7 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.utils.deep_linking import create_start_link
 
 from infrastructure.database.db_working import UserWorking
+from infrastructure.yokassa import create_payment, check_payment
 from tgbot.keyboards.inline.main_profile.details_kb import profile_dop_section
 from tgbot.keyboards.inline.main_profile.subscribes.subscribes_kb import profile_subscribes
 from tgbot.keyboards.inline.subscrbe_check_kb import money_set
@@ -15,10 +16,11 @@ from tgbot.keyboards.reply.promo_cancel import cancel_subscribes
 dop_router = Router()
 
 
-async def referral_money_set(reffered_by, balance):
-    user = await UserWorking.get_user(reffered_by)
+async def referral_money_set(user_id, balance):
+    user = await UserWorking.get_user(user_id)
+
     if user.referred_by:
-        await UserWorking.set_referral_balance(reffered_by, balance * 0.1)
+        await UserWorking.set_referral_balance(user.referred_by_id, balance=balance * 0.1)
 
 
 class states(StatesGroup):
@@ -36,28 +38,70 @@ async def choosing_neuro_to_txtimg(call: CallbackQuery, state: FSMContext):
 @dop_router.callback_query(F.data.contains('monthSub'))
 async def choosing_neuro_to_txtimg(call: CallbackQuery, state: FSMContext):
     data = call.data.split('_')[1]
+
     if data == '1':
+        payment = create_payment(150)
         await call.message.delete()
-        await call.message.answer(text='Вы выбрали подписку на 1 месяц',
-                                  reply_markup=money_set(100))
+        await call.message.answer(text='''*Тариф:* на 1 месяц
+*Стоимость:* 150 🇷🇺RUB
+*Срок действия:* 30 дней
+        
+*Вы получите доступ к следующим ресурсам:*
+- GPT чат-бот
+- Генерация изображений
+        ''',
+                                  reply_markup=money_set(payment), parse_mode='Markdown')
 
     elif data == '3':
+        payment = create_payment(400)
         await call.message.delete()
-        await call.message.answer(text='Вы выбрали подписку на 3 месяца',
-                                  reply_markup=money_set(200))
+        await call.message.answer(text='''*Тариф:* на 3 месяца
+*Стоимость:* 400 🇷🇺RUB
+*Срок действия:* 90 дней
+        
+*Вы получите доступ к следующим ресурсам:*
+- GPT чат-бот
+- Генерация изображений
+        ''',
+                                  reply_markup=money_set(payment), parse_mode='Markdown')
 
     elif data == '12':
+        payment = create_payment(1000)
+
         await call.message.delete()
-        await call.message.answer(text='Вы выбрали подписку на год',
-                                  reply_markup=money_set(300))
+        await call.message.answer(text='''*Тариф:* на 1 год
+*Стоимость:* 1000 🇷🇺RUB
+*Срок действия:* 365 дней
+
+*Вы получите доступ к следующим ресурсам:*
+- GPT чат-бот
+- Генерация изображений
+        ''',
+                                  reply_markup=money_set(payment), parse_mode='Markdown')
 
 
 @dop_router.callback_query(F.data.contains('check_payment'))
 async def check_paymentss__(call: CallbackQuery, state: FSMContext):
-    data = call.data.split('_')[2]
-    await referral_money_set(reffered_by=call.from_user.id, balance=int(data))
-    await UserWorking.set_subscribe_true(call.from_user.id)
-    await call.message.edit_text('Вы оплатили подписку')
+    payment_id = call.data.split('_')[2]
+    value = float(call.data.split('_')[3])
+    result = check_payment(payment_id=payment_id)
+
+    print(result)
+    if not result:
+        await call.answer(text='Оплата не прошла')
+    else:
+        await referral_money_set(user_id=call.from_user.id, balance=value)
+        days = 0
+        match int(value):
+            case 150:
+                days = 30
+            case 400:
+                days = 90
+            case 1000:
+                days = 365
+
+        await UserWorking.set_subscribe_true(call.from_user.id, days)
+        await call.message.edit_text('Оплата прошла успешно')
 
 
 @dop_router.callback_query(F.data == 'cancel_payment')

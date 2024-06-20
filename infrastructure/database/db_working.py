@@ -33,9 +33,10 @@ class UserWorking:
         await user.save()
 
     @staticmethod
-    async def set_subscribe_true(user_id):
+    async def set_subscribe_true(user_id, time):
         user = await User.get(user_id=user_id)
         user.subscribe = True
+        user.date = datetime.date.today() + datetime.timedelta(days=time)
         await user.save()
 
     @staticmethod
@@ -43,6 +44,7 @@ class UserWorking:
         user = await User.get(user_id=user_id)
         user.subscribe = False
         await user.save()
+
     @staticmethod
     async def get_id_from_name(username):
 
@@ -68,6 +70,11 @@ class UserWorking:
         user.free_attempts_gpt = d - 1
         await user.save()
         return user.free_attempts_gpt
+
+    @staticmethod
+    async def get_all_users_with_subs():
+
+        return await User.filter(subscribe=True)
 
 
 class AdminWorking:
