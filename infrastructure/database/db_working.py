@@ -7,18 +7,42 @@ from infrastructure.database.models import User
 
 class UserWorking:
     @staticmethod
-    async def add_user(user_id, username, time):
+    async def add_user(user_id, username, referred_by):
         try:
             return await User.get(user_id=user_id)
         except tortoise.exceptions.DoesNotExist:
-            print(f"Created user {username}")
-            await User.create(user_id=user_id, username=username, role_='member',
-                              date=time + datetime.timedelta(days=30), your_promo='', activated_promo='')
+            if referred_by:
+                try:
+                    referral = await User.get(user_id=referred_by)
+                except tortoise.exceptions.DoesNotExist:
+                    await User.create(user_id=user_id, username=username)
+                    return
+                await User.create(user_id=user_id, username=username, referred_by=referral)
+
+            else:
+                await User.create(user_id=user_id, username=username)
 
     @staticmethod
     async def check_user(user_id):
         return await User.get_or_none(user_id=user_id)
 
+    @staticmethod
+    async def set_referral_balance(user_id, balance):
+        user = await User.get(user_id=user_id)
+        user.referral_balance += balance
+        await user.save()
+
+    @staticmethod
+    async def set_subscribe_true(user_id):
+        user = await User.get(user_id=user_id)
+        user.subscribe = True
+        await user.save()
+
+    @staticmethod
+    async def set_subscribe_false(user_id):
+        user = await User.get(user_id=user_id)
+        user.subscribe = False
+        await user.save()
     @staticmethod
     async def get_id_from_name(username):
 
@@ -36,17 +60,6 @@ class UserWorking:
         return user
 
     @staticmethod
-    async def role_update(username, role):
-
-        user = await User.get(username=username)
-        user.role_ = role
-        user.is_employee = False
-        if role == 'admin':
-            user.is_employee = True
-
-        await user.save()
-
-    @staticmethod
     async def attempt_gpt_minus(user_id):
 
         user = await User.get(user_id=user_id)
@@ -55,18 +68,6 @@ class UserWorking:
         user.free_attempts_gpt = d - 1
         await user.save()
         return user.free_attempts_gpt
-
-    @staticmethod
-    async def set_your_promo(user_id, promo):
-        user = await User.get(user_id=user_id)
-        user.your_promo = promo
-        await user.save()
-
-    @staticmethod
-    async def activate_promo(user_id, promo):
-        user = await User.get(user_id=user_id)
-        user.activated_promo = promo
-        await user.save()
 
 
 class AdminWorking:
@@ -80,7 +81,7 @@ class AdminWorking:
             return await User.get(user_id=user_id)
         except tortoise.exceptions.DoesNotExist:
 
-            await User.create(user_id=user_id, username=username, role_='admin', profit=0, is_employee=True, date=time)
+            await User.create(user_id=user_id, username=username, is_employee=True, date=time)
 
     @staticmethod
     async def check_admin(user_id):

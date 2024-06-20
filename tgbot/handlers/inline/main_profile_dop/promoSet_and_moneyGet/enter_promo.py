@@ -38,7 +38,7 @@ async def set_promocode(message: Message, state: FSMContext):
 
 Статистика:
 
-Ваш промокод: -{user.activated_promo}
+
 
 Доступно для вывода: 0 ₽
 Приведено рефералов: 0
@@ -51,7 +51,7 @@ async def set_promocode(message: Message, state: FSMContext):
 
 @dop_router.message(states.create_promo)
 async def set_promocode(message: Message, state: FSMContext):
-    await UserWorking.set_your_promo(message.from_user.id, message.text)
+
     await message.answer(text=f'Промокод {message.text} создан!', reply_markup=main_user_profile())
     user = await UserWorking.get_user(message.from_user.id)
     text = f"""В нашем боте включена система промокодов. Приглашайте друзей и зарабатывайте на этом!
@@ -59,7 +59,7 @@ async def set_promocode(message: Message, state: FSMContext):
 
 Статистика:
 
-Ваш промокод: -{user.activated_promo}
+
 
 Доступно для вывода: 0 ₽
 Приведено рефералов: 0
@@ -79,7 +79,7 @@ async def back_button(call: CallbackQuery):
 
 Статистика:
 
-Ваш промокод: -{user.activated_promo}
+
 
 Доступно для вывода: 0 ₽
 Приведено рефералов: 0

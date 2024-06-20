@@ -1,7 +1,7 @@
 import datetime
 
 from aiogram import Router
-from aiogram.filters import CommandStart
+from aiogram.filters import CommandStart, CommandObject
 from aiogram.types import Message
 
 from infrastructure.database.db_working import UserWorking
@@ -12,10 +12,12 @@ user_router = Router()
 
 
 @user_router.message(CommandStart())
-async def user_start(message: Message):
+async def user_start(message: Message, command: CommandObject = None):
+    referral = command.args if command else None
     await message.answer(
         """Привет! Я - AVRAAM, бот с искусственным интеллектом. \nТы можешь задать мне любой вопрос, а я на него отвечу☺️""",
         reply_markup=main_user_profile())
     print('added', message.from_user.username)
+
     await UserWorking.add_user(username=message.from_user.username, user_id=message.from_user.id,
-                               time=datetime.date.today())
+                               referred_by=referral)

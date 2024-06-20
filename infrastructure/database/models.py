@@ -2,13 +2,11 @@ from tortoise import Model, fields
 
 
 class User(Model):
-    id = fields.IntField(primary_key=True)
-    user_id = fields.TextField()
+    user_id = fields.TextField(primary_key=True)
     username = fields.TextField()
-    role_ = fields.TextField()
-    date = fields.DateField()
-    your_promo = fields.TextField()
-    activated_promo = fields.TextField()
+    date = fields.DateField(null=True)
+    referred_by = fields.ForeignKeyField('models.User', null=True)
+    referral_balance = fields.FloatField(default=0)
     free_attempts_gpt = fields.IntField(default=5)
     subscribe = fields.BooleanField(default=False)
     is_employee = fields.BooleanField(default=False)

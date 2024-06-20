@@ -46,7 +46,7 @@ async def set_promocode(message: Message, state: FSMContext):
 
 Статистика:
 
-Ваш промокод: -{user.activated_promo}
+
 
 Доступно для вывода: 0 ₽
 Приведено рефералов: 0

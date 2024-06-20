@@ -4,6 +4,7 @@ from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import Message, CallbackQuery
+from aiogram.utils.deep_linking import create_start_link
 
 from infrastructure.database.db_working import UserWorking
 from tgbot.keyboards.inline.main_profile.details_kb import profile_dop_section
@@ -26,7 +27,7 @@ async def choosing_neuro_to_txtimg(call: CallbackQuery, state: FSMContext):
 
 Статистика:
 
-Ваш промокод: -{user.activated_promo}
+
 
 Доступно для вывода: 0 ₽
 Приведено рефералов: 0
@@ -39,12 +40,16 @@ async def choosing_neuro_to_txtimg(call: CallbackQuery, state: FSMContext):
 async def back_button(call: CallbackQuery):
     await call.answer()
     user = await UserWorking.get_user(call.from_user.id)
-
+    start_link = await create_start_link(call.bot, str(call.from_user.id))
+    t = f'*Последний день подписки:* {user.date}\n' if user.date else ""
     text = f"""     👤 *Ваш профиль* `{user.username}`\n
-    *Идентификатор:* `{user.user_id}`\n
-    📊 Информация:
-    *Последний день подписки:* `{user.date}`
+*Идентификатор:* `{user.user_id}`\n
 
+📊 Информация:
+{t}
+*Ваш реферальный баланс:* `{user.referral_balance}`
+
+*Ваша реферальная ссылка:* \n`{start_link}`
                     """
     await call.message.edit_text(text=text, parse_mode="Markdown",
                                  reply_markup=profile_dop_section())

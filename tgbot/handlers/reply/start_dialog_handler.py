@@ -29,7 +29,7 @@ async def with_puree(message: types.Message, state: FSMContext):
 
 Приятного общения!"""
     kb = [
-        [types.KeyboardButton(text="Закончить диалог")]
+        [types.KeyboardButton(text="👋🏻 Закончить диалог")]
     ]
     keyboard = types.ReplyKeyboardMarkup(
         keyboard=kb,
@@ -39,7 +39,7 @@ async def with_puree(message: types.Message, state: FSMContext):
     await state.set_state(Dialog.start_gpt)
 
 
-@router.message(F.text == "Закончить диалог")
+@router.message(F.text == "👋🏻 Закончить диалог")
 @router.message(Command('end'))
 async def with_puree(message: types.Message, state: FSMContext):
     kb = [
@@ -55,10 +55,9 @@ async def with_puree(message: types.Message, state: FSMContext):
 
 @router.message(Dialog.start_gpt)
 async def question_gpt(message: types.Message, state: FSMContext):
-    if await UserWorking.attempt_gpt_minus(message.from_user.id) == 0:
-        await message.answer(text='Чтобы дальше пользовтаься чатом надо приобрести подписку!',
-                             reply_markup=end_dialog())
-    else:
+    user = await UserWorking.get_user(message.from_user.id)
+
+    if await UserWorking.attempt_gpt_minus(message.from_user.id) >= 0 or user.subscribe:
         user_data = await state.get_data()
         msg = await message.answer(text='Навожу магию, секунду 🪄')
         user_data["messages"].append(
@@ -75,3 +74,6 @@ async def question_gpt(message: types.Message, state: FSMContext):
                 "content": bot_message,
             })
         await state.update_data(messages=user_data["messages"])
+    else:
+        await message.answer(text='Чтобы дальше пользовтаься чатом надо приобрести подписку!',
+                             reply_markup=end_dialog())

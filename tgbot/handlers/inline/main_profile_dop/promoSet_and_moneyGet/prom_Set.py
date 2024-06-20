@@ -35,7 +35,7 @@ async def set_promocode(message: Message, state: FSMContext):
     text = f"""В нашем боте включена система промокодов. Приглашайте друзей и зарабатывайте на этом!
 Чем больше использований Вашего промокода - тем больше вы будете получать!
 Статистика:
-Ваш промокод: -{user.activated_promo}
+
 Доступно для вывода: 0 ₽
 Приведено рефералов: 0
 Награда за активацию: -"""
@@ -57,7 +57,7 @@ async def set_promocode(message: Message, state: FSMContext):
 
 Статистика:
 
-Ваш промокод: -{user.activated_promo}
+
 
 Доступно для вывода: 0 ₽
 Приведено рефералов: 0
@@ -77,7 +77,7 @@ async def back_button(call: CallbackQuery):
 
 Статистика:
 
-Ваш промокод: -{user.activated_promo}
+
 
 Доступно для вывода: 0 ₽
 Приведено рефералов: 0
