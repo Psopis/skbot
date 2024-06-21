@@ -7,7 +7,7 @@ from infrastructure.database.models import User
 
 class UserWorking:
     @staticmethod
-    async def add_user(user_id, username, referred_by):
+    async def add_user(user_id, username, referred_by, employee=False):
         try:
             return await User.get(user_id=user_id)
         except tortoise.exceptions.DoesNotExist:
@@ -15,12 +15,12 @@ class UserWorking:
                 try:
                     referral = await User.get(user_id=referred_by)
                 except tortoise.exceptions.DoesNotExist:
-                    await User.create(user_id=user_id, username=username)
+                    await User.create(user_id=user_id, username=username, is_employee=employee)
                     return
-                await User.create(user_id=user_id, username=username, referred_by=referral)
+                await User.create(user_id=user_id, username=username, referred_by=referral, is_employee=employee)
 
             else:
-                await User.create(user_id=user_id, username=username)
+                await User.create(user_id=user_id, username=username, is_employee=employee)
 
     @staticmethod
     async def check_user(user_id):
@@ -30,6 +30,7 @@ class UserWorking:
     async def set_referral_balance(user_id, balance):
         user = await User.get(user_id=user_id)
         user.referral_balance += balance
+        user.all_money_reffred += balance
         await user.save()
 
     @staticmethod
@@ -37,6 +38,12 @@ class UserWorking:
         user = await User.get(user_id=user_id)
         user.subscribe = True
         user.date = datetime.date.today() + datetime.timedelta(days=time)
+        await user.save()
+
+    @staticmethod
+    async def set_referred(user_id):
+        user = await User.get(user_id=user_id)
+        user.referreded = True
         await user.save()
 
     @staticmethod
@@ -70,6 +77,16 @@ class UserWorking:
         user.free_attempts_gpt = d - 1
         await user.save()
         return user.free_attempts_gpt
+
+    @staticmethod
+    async def plus_one_refferes_user(user_id):
+        user = await User.get(user_id=user_id)
+        user.users_refered += 1
+        await user.save()
+
+    @staticmethod
+    async def get_all_users_refereded():
+        return await User.filter(referreded=True)
 
     @staticmethod
     async def get_all_users_with_subs():

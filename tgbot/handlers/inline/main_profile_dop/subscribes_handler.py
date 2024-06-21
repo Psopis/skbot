@@ -20,7 +20,9 @@ async def referral_money_set(user_id, balance):
     user = await UserWorking.get_user(user_id)
 
     if user.referred_by:
+        await UserWorking.set_referred(user_id=user_id)
         await UserWorking.set_referral_balance(user.referred_by_id, balance=balance * 0.1)
+
 
 
 class states(StatesGroup):
@@ -91,6 +93,7 @@ async def check_paymentss__(call: CallbackQuery, state: FSMContext):
         await call.answer(text='Оплата не прошла')
     else:
         await referral_money_set(user_id=call.from_user.id, balance=value)
+
         days = 0
         match int(value):
             case 150:

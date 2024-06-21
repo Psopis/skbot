@@ -4,7 +4,7 @@ from tgbot.handlers.inline.check_subscribe_handler import sub_router
 from tgbot.handlers.inline.user_start_handler import user_router
 from tgbot.handlers.reply import neuroseti_handler
 from tgbot.handlers.reply import start_dialog_handler
-from tgbot.handlers.reply import main_profile_handlers
+from tgbot.handlers.reply import main_profile_handlers, refferal_gets
 from tgbot.handlers.inline.neuro import remake_video_handler, remake_photo_handler
 from tgbot.handlers.inline.neuro.generation_photos_choose import SD_generation_photo_handler, Dalle_g_photo_handler, \
     Midjourny_g_photo_handler
@@ -26,7 +26,8 @@ routers_list = [
     help_handler.dop_router,
     partner_programm_handler.dop_router,
     enter_promo.dop_router,
-    prom_Set.dop_router
+    prom_Set.dop_router,
+    refferal_gets.router
     # echo_router must be last
 ]
 
