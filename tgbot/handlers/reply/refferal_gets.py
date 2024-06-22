@@ -24,15 +24,15 @@ async def refferals_gets_all(message: Message):
         users = await UserWorking.get_all_users_refereded()
         wb = load_workbook("stats.xlsx")
         ws = wb.active
-        headers = ['user_id', 'Имя', 'referral_id', 'referral_username', 'Баланс', 'Приглашенно пользователей', 'is_subscribe',
-                   'Всего было заработано']
-        ws.append(headers)
+        # headers = ['user_id', 'Имя', 'referral_id', 'referral_username', 'Баланс', 'Приглашенно пользователей', 'is_subscribe',
+        #            'Всего было заработано']
+        # ws.append(headers)
         for user in users:
             referred_by = await user.referred_by
             ws.append([user.user_id, user.username, referred_by.user_id if referred_by else None,
-                       referred_by.username if referred_by else None, user.referral_balance,
+                       referred_by.username if referred_by else None,
                        user.users_refered,
-                       user.subscribe,
+
                        user.all_money_reffred])
 
             # text += f'*Пользователь*:*@{user.username}* \n*Реферальный баланс:* {user.referral_balance} \n*Реферальная ссылка от:*{user_ref}\n*Всего приглашенных пользователей:*{user.users_refered}\n*Всего заработано:*{user.all_money_reffred}🇷🇺RUB\n\n'
