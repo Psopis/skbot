@@ -10,10 +10,10 @@ def category_neuro():
         callback_data="generation_photo"
     )
     )
-    kb.row(InlineKeyboardButton(
-        text="📷Обработка фото", callback_data="photo_remake"
-    )
-    )
+    # kb.row(InlineKeyboardButton(
+    #     text="📷Обработка фото", callback_data="photo_remake"
+    # )
+    # )
 
     # kb.row(InlineKeyboardButton(
     #     text="📼Видео", callback_data="video_remake"
