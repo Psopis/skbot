@@ -12,7 +12,7 @@ class TgBot:
 
     token: str
     chat_id: str
-    admin_ids: list[int]
+    admin_ids: int
     use_redis: bool
 
     @staticmethod
