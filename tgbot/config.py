@@ -6,9 +6,7 @@ from environs import Env
 
 @dataclass
 class TgBot:
-    """
-    Creates the TgBot object from environment variables.
-    """
+
 
     token: str
     chat_id: str
