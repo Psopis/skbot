@@ -24,7 +24,6 @@ async def referral_money_set(user_id, balance):
         await UserWorking.set_referral_balance(user.referred_by_id, balance=balance * 0.1)
 
 
-
 class states(StatesGroup):
     generation_photo = State()
     money_set = State()
@@ -47,7 +46,7 @@ async def choosing_neuro_to_txtimg(call: CallbackQuery, state: FSMContext):
         await call.message.answer(text='''*Тариф:* на 1 месяц
 *Стоимость:* 150 🇷🇺RUB
 *Срок действия:* 30 дней
-        
+
 *Вы получите доступ к следующим ресурсам:*
 - GPT чат-бот
 - Генерация изображений
@@ -60,7 +59,7 @@ async def choosing_neuro_to_txtimg(call: CallbackQuery, state: FSMContext):
         await call.message.answer(text='''*Тариф:* на 3 месяца
 *Стоимость:* 400 🇷🇺RUB
 *Срок действия:* 90 дней
-        
+
 *Вы получите доступ к следующим ресурсам:*
 - GPT чат-бот
 - Генерация изображений
@@ -130,11 +129,11 @@ async def back_button(call: CallbackQuery):
     t = f'*Последний день подписки:* {user.date}\n' if user.date else ""
     text = f"""     👤 *Ваш профиль* `{user.username}`\n
 *Идентификатор:* `{user.user_id}`\n
-    
+
 📊 Информация:
 {t}
 *Ваш реферальный баланс:* `{user.referral_balance}`
-    
+
 *Ваша реферальная ссылка:* \n`{start_link}`
                     """
     await call.message.edit_text(text=text, parse_mode="Markdown",
