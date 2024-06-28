@@ -50,6 +50,11 @@ def category_neuro_video():
         callback_data="kand_neuro"
     )
     )
+    kb.add(InlineKeyboardButton(
+        text="LCM-SVD",
+        callback_data="img_to_neuro"
+    )
+    )
     kb.row(InlineKeyboardButton(
         text="🔙", callback_data="back_neuro"
     )
