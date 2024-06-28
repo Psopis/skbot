@@ -1,6 +1,7 @@
 import os
 import uuid
 
+from PIL import Image
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 
@@ -71,13 +72,14 @@ async def send_text_to_img_neuro(message: Message, state: FSMContext):
     photo = uuid.uuid1()
     await message.bot.download(file=message.photo[-1].file_id,
                                destination=f'infrastructure/neuro/down_video/{photo}.jpg')
+    # image = Image.open(f"infrastructure/neuro/down_video/{photo}.jpg")
 
     video = img_to_vid_generate(f'infrastructure/neuro/down_video/{photo}.jpg')
-    os.remove(f'infrastructure/neuro/down_video/{photo}.jpg')
+
     await msg.delete()
     await message.bot.send_video(chat_id=message.chat.id, video=FSInputFile(video))
     await message.answer(text="Видео получено!", reply_markup=main_user_profile())
-
+    os.remove(f'infrastructure/neuro/down_video/{photo}.jpg')
     os.remove(video)
     await state.clear()
 
