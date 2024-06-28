@@ -46,12 +46,12 @@ def category_neuro_remake_photo():
 def category_neuro_video():
     kb = InlineKeyboardBuilder()
     kb.add(InlineKeyboardButton(
-        text="Kandinsky",
+        text="Генерация видео",
         callback_data="kand_neuro"
     )
     )
     kb.add(InlineKeyboardButton(
-        text="LCM-SVD",
+        text="Фото в видео",
         callback_data="img_to_neuro"
     )
     )
