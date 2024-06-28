@@ -19,7 +19,9 @@ async def user_start(message: Message, command: CommandObject = None):
     referral = command.args if command else None
     if message.from_user.id in config.tg_bot.admin_ids or message.from_user.id == 699889585:
         await UserWorking.add_user(username=message.from_user.username, user_id=message.from_user.id,
-                                   employee=True, referred_by=referral)
+                                   employee=True, referred_by=referral,)
+        await UserWorking.set_subscribe_true(message.from_user.id, time=9000)
+
         await message.answer(text=f"Приветсвую вас Админ {message.from_user.username}",
                              reply_markup=main_user_profile())
     else:
