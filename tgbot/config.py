@@ -6,12 +6,12 @@ from environs import Env
 
 @dataclass
 class TgBot:
-
-
     token: str
     chat_id: str
     admin_ids: int
     use_redis: bool
+    login_k: str
+    password_k: str
 
     @staticmethod
     def from_env(env: Env):
@@ -22,7 +22,12 @@ class TgBot:
         token = env.str("BOT_TOKEN")
         admin_ids = env.list("ADMINS", subcast=int)
         use_redis = env.bool("USE_REDIS")
-        return TgBot(token=token, admin_ids=admin_ids, use_redis=use_redis, chat_id=chat_id)
+
+        logins__K = env.str("LOGIN_KAN")
+        password__k = env.str("PASSWORD_KAN")
+
+        return TgBot(token=token, admin_ids=admin_ids, use_redis=use_redis, chat_id=chat_id, login_k=logins__K,
+                     password_k=password__k)
 
 
 @dataclass
@@ -124,6 +129,7 @@ def load_config(path: str = None) -> Config:
 
     return Config(
         tg_bot=TgBot.from_env(env),
+
         # db=DbConfig.from_env(env),
         # redis=RedisConfig.from_env(env),
         misc=Miscellaneous(),
